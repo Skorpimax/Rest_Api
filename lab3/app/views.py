@@ -16,7 +16,11 @@ def index():
 
 @main.route("/books", methods=["GET"])
 def get_books():
-    books = Book.query.all()
+    limit = request.args.get('limit', default=10, type=int)
+    offset = request.args.get('offset', default=0, type=int)
+
+    books = Book.query.offset(offset).limit(limit).all()
+
     return make_response({"books": [b.to_dict() for b in books]})
 
 @main.route("/books/<string:id>", methods=["GET"])
