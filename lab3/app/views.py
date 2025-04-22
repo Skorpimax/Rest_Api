@@ -1,6 +1,6 @@
 from typing import Dict, Union
 from app import db
-from flask import Blueprint, jsonify, abort, request
+from flask import Blueprint, jsonify, abort, request, url_for
 
 from .models import Book
 
@@ -20,8 +20,15 @@ def get_books():
     offset = request.args.get('offset', default=0, type=int)
 
     books = Book.query.offset(offset).limit(limit).all()
+    total = Book.query.count()
 
-    return make_response({"books": [b.to_dict() for b in books]})
+    next_page = url_for('books.get_books', limit=limit, offset=offset + limit) if offset + limit < total else None
+    prev_page = url_for('books.get_books', limit=limit, offset=max((offset - limit), 0)) if offset > 0 else None
+
+    return make_response({"books": [b.to_dict() for b in books],
+                          "total amount": total,
+                          "next page": next_page,
+                          "previous page": prev_page})
 
 @main.route("/books/<string:id>", methods=["GET"])
 def get_book(id):
@@ -38,6 +45,9 @@ def create_book():
 
 @main.route('/books/<string:id>', methods=['DELETE'])
 def delete_book(id: str):
-    Book.query.filter_by(id=id).delete()
+    book = Book.query.get_or_404(id, description="Book is not found")
+
+    db.session.delete(book)
     db.session.commit()
+
     return make_response({"message": "Book deleted"}, 200)
