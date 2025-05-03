@@ -22,8 +22,8 @@ def get_books():
     books = Book.query.offset(offset).limit(limit).all()
     total = Book.query.count()
 
-    next_page = url_for('books.get_books', limit=limit, offset=offset + limit) if offset + limit < total else None
-    prev_page = url_for('books.get_books', limit=limit, offset=max((offset - limit), 0)) if offset > 0 else None
+    next_page = url_for('main.get_books', limit=limit, offset=offset + limit) if offset + limit < total else None
+    prev_page = url_for('main.get_books', limit=limit, offset=max((offset - limit), 0)) if offset > 0 else None
 
     return make_response({"books": [b.to_dict() for b in books],
                           "total amount": total,

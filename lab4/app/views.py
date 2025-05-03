@@ -39,7 +39,7 @@ def get_books():
     next_curs = books[-1].id if books else None
     prev_curs = books[0].id if books else None
 
-    next_page = url_for('books.get_books', limit=limit, cursor=next_curs, direction=direction) if next_curs else None
+    next_page = url_for('main.get_books', limit=limit, cursor=next_curs, direction='desc' if is_desc else 'asc') if next_curs else None
     prev_page = url_for('main.get_books', limit=limit, cursor=prev_curs, direction='asc' if is_desc else 'desc') if prev_curs else None
 
     return make_response({"books": [b.to_dict() for b in books],
