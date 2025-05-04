@@ -1,8 +1,8 @@
 from bson import ObjectId
 from fastapi.encoders import jsonable_encoder
 
-from database import book_collection
-from schemas import BookCreate, Book
+from app.database import book_collection
+from app.schemas import BookCreate, Book
 
 
 async def create_book(book: BookCreate):

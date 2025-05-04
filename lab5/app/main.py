@@ -3,12 +3,12 @@ from typing import List
 import uvicorn
 from fastapi import FastAPI, HTTPException
 
-import crud
-from schemas import Book, BookCreate
+from app import crud
+from app.schemas import Book, BookCreate
 
 app = FastAPI()
 if __name__ == "__main__":
-    uvicorn.run(app, host="127.0.0.1", port=8000, debug=True)
+    uvicorn.run(app, host="127.0.0.1", port=8000)
 
 @app.get("/")
 async def root():
